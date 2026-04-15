@@ -1,0 +1,130 @@
+/* MurilloWEB — Estilos globales */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables CSS */
+:root {
+  --color-fondo: #FAFAF5;
+  --color-amarillo: #F5A623;
+  --color-verde: #2D7A3E;
+  --color-texto: #1A1A0F;
+  --color-texto-sec: #5C5C4A;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-fondo);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-amarillo);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D97706;
+}
+
+/* Scroll suave global */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Font antialiasing */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Selección de texto */
+::selection {
+  background-color: var(--color-amarillo);
+  color: var(--color-texto);
+}
+
+/* Focus visible mejorado */
+:focus-visible {
+  outline: 2px solid var(--color-amarillo);
+  outline-offset: 2px;
+}
+
+/* Animación de entrada para secciones */
+@layer utilities {
+  .section-fade-in {
+    @apply opacity-0 translate-y-4 transition-all duration-700;
+  }
+  .section-fade-in.visible {
+    @apply opacity-100 translate-y-0;
+  }
+}
+
+/* Override para que los gradientes de fondo sean full-screen */
+.hero-gradient {
+  background: linear-gradient(135deg, #1A3A0F 0%, #2D5A1B 40%, #1A4020 70%, #1A1A0F 100%);
+}
+
+/* Animación de gradiente para el hero */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 300% 300%;
+  animation: gradientShift 10s ease infinite;
+}
+
+/* Tipografía de impacto */
+.text-hero {
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+/* Cards con hover shadow coloreado */
+.card-hover-lgm:hover {
+  box-shadow: 0 20px 40px rgba(245, 166, 35, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Tabla comparador — columna LGM resaltada */
+.col-lgm {
+  background-color: rgba(245, 166, 35, 0.06);
+}
+
+/* Mobile performance */
+@media (max-width: 640px) {
+  .hero-particles {
+    display: none;
+  }
+}
+
+/* Print styles — página /qr */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ocultar navbar y footer al imprimir el QR */
+  nav,
+  footer,
+  .fixed {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Forzar colores B&W para impresión económica */
+  .print\:rounded-none {
+    border-radius: 0 !important;
+  }
+}
