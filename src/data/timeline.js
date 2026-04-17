@@ -28,10 +28,17 @@ export const timeline = [
     badge: null,
   },
   {
-    año: '2022',
-    titulo: 'Renunció a ciudadanía americana para ser embajador',
+    año: 'Mayo 2022',
+    titulo: 'Fórmula vicepresidencial de Sergio Fajardo',
     descripcion:
-      'Cuando Petro lo llamó a ser Embajador en Washington, Murillo renunció a su ciudadanía estadounidense. No como gesto simbólico — porque era requisito legal. Y lo hizo.',
+      'En la primera vuelta acompañó a Fajardo. En segunda vuelta apoyó a Petro argumentando que era mejor alternativa que Rodolfo Hernández. No fue candidato de Petro — mantuvo su posición independiente.',
+    badge: null,
+  },
+  {
+    año: 'Sept. 2022',
+    titulo: 'Embajador en Washington — renuncia a ciudadanía americana',
+    descripcion:
+      'Petro lo nombró embajador en Estados Unidos. Para asumir el cargo tuvo que renunciar a su ciudadanía estadounidense que tenía desde su exilio. Lo hizo.',
     badge: '🇨🇴 Colombia primero',
   },
   {

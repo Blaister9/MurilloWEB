@@ -72,6 +72,15 @@ export default function Stats() {
     cargar()
   }, [])
 
+  useEffect(() => {
+    // Ocultar esta página de Google
+    const meta = document.createElement('meta')
+    meta.name = 'robots'
+    meta.content = 'noindex, nofollow'
+    document.head.appendChild(meta)
+    return () => document.head.removeChild(meta)
+  }, [])
+
   function handleLimpiar() {
     if (!window.confirm('¿Seguro que quieres borrar todos los datos locales? Esto no se puede deshacer.')) return
     limpiarDatos()

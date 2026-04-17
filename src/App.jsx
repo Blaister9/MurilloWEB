@@ -14,6 +14,7 @@ import Hero from './components/sections/Hero'
 import Countdown from './components/sections/Countdown'
 import { CitizenBanner, LowBandwidthBanner } from './components/ui/LowBandwidthBanner'
 import { useConnectionSpeed } from './hooks/useConnectionSpeed'
+import NotFound from './pages/NotFound'
 
 // Lazy loading para secciones below-the-fold
 const QuienEs         = lazy(() => import('./components/sections/QuienEs'))
@@ -144,8 +145,8 @@ export default function App() {
           }
         />
 
-        {/* Fallback para rutas no encontradas */}
-        <Route path="*" element={<MainLayout />} />
+        {/* Fallback para rutas no encontradas — 404 real */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )

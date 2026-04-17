@@ -2,8 +2,9 @@
  * Utilidades de sharing para MurilloWEB
  * Soporta Web Share API nativa + fallbacks a WhatsApp y X (Twitter)
  */
+import { SITE_CONFIG } from '../config.js'
 
-export const SHARE_URL = 'https://murillopresident.netlify.app'
+export const SHARE_URL = SITE_CONFIG.url
 
 export const DEFAULT_SHARE_TEXT = `Conoce a Luis Gilberto Murillo, el candidato independiente del Chocó 🇨🇴
 Sin partido. Sin jefe. Sin escándalos. #LGMurillo #Colombia2026`

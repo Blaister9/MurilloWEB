@@ -106,6 +106,20 @@ function ResultadoCard({ resultado, onReset, share }) {
           Volver a intentar
         </button>
       </div>
+
+      {!isLGM && (
+        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-sm text-yellow-800">
+          <p className="font-semibold mb-1">¿Conoces a Luis Gilberto Murillo?</p>
+          <p>
+            Aunque tus ideas se acercan más a otro candidato en este quiz,
+            te invitamos a revisar su trayectoria y propuestas.
+            Puede que encuentres puntos en común que no esperabas.
+          </p>
+          <a href="#propuestas" className="inline-block mt-2 text-yellow-700 underline font-medium">
+            Ver propuestas de LGM →
+          </a>
+        </div>
+      )}
     </motion.div>
   )
 }
@@ -138,7 +152,13 @@ export default function QuizCandidato() {
       Object.values(newAnswers).forEach((candidato) => {
         counts[candidato] = (counts[candidato] || 0) + 1
       })
-      const winner = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0]
+      const sorted = Object.entries(counts).sort((a, b) => {
+        if (b[1] !== a[1]) return b[1] - a[1]
+        if (a[0] === 'lgm') return -1
+        if (b[0] === 'lgm') return 1
+        return 0
+      })
+      const winner = sorted[0][0]
       const resultadoFinal = { ...resultados[winner], id: winner }
       setResultado(resultadoFinal)
       setFinished(true)

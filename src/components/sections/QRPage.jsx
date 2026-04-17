@@ -10,8 +10,9 @@ import { useEffect } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { Printer, ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { SITE_CONFIG } from '../../config.js'
 
-const SITE_URL = 'https://lgm2026.co'
+const SITE_URL = SITE_CONFIG.url
 
 export default function QRPage() {
   const navigate = useNavigate()
