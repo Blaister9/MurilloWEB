@@ -3,6 +3,7 @@
  * Gradiente animado, nombre enorme, typewriter, botón de sharing
  */
 import { useState, useEffect } from 'react'
+import { useCountdown } from '../../hooks/useCountdown'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Share2, ChevronDown } from 'lucide-react'
 import { useShare } from '../../hooks/useShare'
@@ -45,24 +46,7 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
 
 // Contador regresivo compacto para el Hero
 function HeroCountdown() {
-  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
-  useEffect(() => {
-    function calc() {
-      const target = new Date('2026-05-31T08:00:00-05:00').getTime()
-      const now = Date.now()
-      const diff = Math.max(0, target - now)
-      setTime({
-        days: Math.floor(diff / 86400000),
-        hours: Math.floor((diff % 86400000) / 3600000),
-        minutes: Math.floor((diff % 3600000) / 60000),
-        seconds: Math.floor((diff % 60000) / 1000),
-      })
-    }
-    calc()
-    const id = setInterval(calc, 1000)
-    return () => clearInterval(id)
-  }, [])
+  const { dias, horas, minutos, segundos } = useCountdown()
 
   return (
     <motion.div
@@ -73,10 +57,10 @@ function HeroCountdown() {
     >
       <span className="text-white/80 text-xs font-body mr-1">🗓️ 31 mayo ·</span>
       {[
-        { val: time.days, label: 'd' },
-        { val: time.hours, label: 'h' },
-        { val: time.minutes, label: 'm' },
-        { val: time.seconds, label: 's' },
+        { val: dias, label: 'd' },
+        { val: horas, label: 'h' },
+        { val: minutos, label: 'm' },
+        { val: segundos, label: 's' },
       ].map(({ val, label }, i) => (
         <span key={label} className="flex items-baseline gap-0.5">
           <span className="font-impact text-amarillo text-xl">
@@ -137,8 +121,8 @@ export default function Hero() {
       {/* Overlay con gradiente */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/30 pointer-events-none" />
 
-      {/* Partículas */}
-      {PARTICLES.map((p, i) => (
+      {/* Partículas — omitir si el usuario prefiere menos movimiento */}
+      {!window.matchMedia('(prefers-reduced-motion: reduce)').matches && PARTICLES.map((p, i) => (
         <Particle key={i} {...p} />
       ))}
 

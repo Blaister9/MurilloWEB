@@ -1,31 +1,33 @@
 /**
- * Sección Apoya — Formulario simple + links a redes sociales
+ * Sección Apoya — Formulario Netlify Forms + links a redes sociales
  */
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Twitter, Instagram, Send, Heart, Share2 } from 'lucide-react'
+import { Twitter, Instagram, Heart, Share2 } from 'lucide-react'
 import { useShare } from '../../hooks/useShare'
 
 export default function Apoya() {
-  const [form, setForm] = useState({ nombre: '', whatsapp: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [enviando, setEnviando] = useState(false)
   const { share } = useShare()
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.nombre || !form.whatsapp) return
+    setEnviando(true)
+    const formData = new FormData(e.target)
 
-    // Construir mailto como fallback sin backend
-    const subject = encodeURIComponent('Quiero apoyar a LGM Murillo 2026')
-    const body = encodeURIComponent(
-      `Nombre: ${form.nombre}\nWhatsApp: ${form.whatsapp}\n\n#LGMurillo #Colombia2026`
-    )
-    window.open(`mailto:apoyo@lgm2026.co?subject=${subject}&body=${body}`, '_blank')
-    setSubmitted(true)
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      })
+      setSubmitted(true)
+    } catch {
+      alert('Error al enviar. Intenta de nuevo.')
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -46,7 +48,7 @@ export default function Apoya() {
             ¿Quieres apoyar a LGM?
           </h2>
           <p className="text-white/80 font-body text-base max-w-xl mx-auto">
-            Déjanos tu nombre y WhatsApp. Un voluntario de la campaña se pondrá en contacto contigo.
+            Déjanos tus datos. Un voluntario de la campaña se pondrá en contacto contigo.
           </p>
         </motion.div>
 
@@ -59,48 +61,59 @@ export default function Apoya() {
             transition={{ duration: 0.6 }}
           >
             {!submitted ? (
-              <form onSubmit={handleSubmit} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <form
+                name="apoya-lgm"
+                method="POST"
+                data-netlify="true"
+                data-netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+              >
+                <input type="hidden" name="form-name" value="apoya-lgm" />
+                <input type="hidden" name="bot-field" />
+
                 <h3 className="font-display font-semibold text-white text-xl mb-5 text-left">
                   Quiero apoyar
                 </h3>
 
                 <div className="flex flex-col gap-4">
-                  <div>
-                    <label className="block text-white/80 text-xs font-body font-medium mb-1.5 text-left uppercase tracking-wider">
-                      Tu nombre
-                    </label>
-                    <input
-                      type="text"
-                      name="nombre"
-                      value={form.nombre}
-                      onChange={handleChange}
-                      placeholder="¿Cómo te llamas?"
-                      required
-                      className="w-full px-4 py-3 rounded-xl bg-white/90 text-textoPrincipal font-body text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amarillo transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-white/80 text-xs font-body font-medium mb-1.5 text-left uppercase tracking-wider">
-                      WhatsApp
-                    </label>
-                    <input
-                      type="tel"
-                      name="whatsapp"
-                      value={form.whatsapp}
-                      onChange={handleChange}
-                      placeholder="+57 300 000 0000"
-                      required
-                      className="w-full px-4 py-3 rounded-xl bg-white/90 text-textoPrincipal font-body text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amarillo transition-all"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    name="nombre"
+                    required
+                    placeholder="Tu nombre"
+                    className="w-full px-4 py-3 rounded-xl bg-white/90 text-textoPrincipal font-body text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amarillo transition-all"
+                  />
+                  <input
+                    type="text"
+                    name="ciudad"
+                    placeholder="Tu ciudad o municipio"
+                    className="w-full px-4 py-3 rounded-xl bg-white/90 text-textoPrincipal font-body text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amarillo transition-all"
+                  />
+                  <input
+                    type="tel"
+                    name="whatsapp"
+                    placeholder="Tu WhatsApp (opcional)"
+                    className="w-full px-4 py-3 rounded-xl bg-white/90 text-textoPrincipal font-body text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amarillo transition-all"
+                  />
+                  <select
+                    name="como_ayudar"
+                    className="w-full px-4 py-3 rounded-xl bg-white/90 text-textoPrincipal font-body text-sm focus:outline-none focus:ring-2 focus:ring-amarillo transition-all"
+                  >
+                    <option value="">¿Cómo quieres apoyar?</option>
+                    <option value="compartir">Compartiendo en mis redes y grupos</option>
+                    <option value="voluntario">Siendo voluntario presencial</option>
+                    <option value="region">Coordinando en mi región</option>
+                    <option value="otro">Otro</option>
+                  </select>
 
                   <button
                     type="submit"
-                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-amarillo hover:bg-yellow-400 text-textoPrincipal font-body font-bold text-sm transition-all shadow-lg active:scale-95"
+                    disabled={enviando}
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-amarillo hover:bg-yellow-400 text-textoPrincipal font-body font-bold text-sm transition-all shadow-lg active:scale-95 disabled:opacity-60"
                   >
                     <Heart size={16} />
-                    Quiero apoyar a LGM
+                    {enviando ? 'Enviando...' : 'Quiero apoyar a LGM'}
                   </button>
                 </div>
 
@@ -114,12 +127,12 @@ export default function Apoya() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center"
               >
-                <div className="text-5xl mb-4">🇨🇴</div>
+                <div className="text-5xl mb-4">🎉</div>
                 <h3 className="font-display font-bold text-2xl text-white mb-2">
-                  ¡Gracias, {form.nombre}!
+                  ¡Recibido!
                 </h3>
-                <p className="text-white/80 font-body text-sm">
-                  Un voluntario de la campaña se pondrá en contacto contigo pronto.
+                <p className="text-white/80 font-body text-sm mt-1">
+                  Gracias por querer ser parte del cambio. El equipo se comunicará contigo pronto.
                 </p>
               </motion.div>
             )}

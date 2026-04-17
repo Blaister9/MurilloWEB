@@ -7,56 +7,64 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icon-192.png', 'icon-512.png'],
+      includeAssets: ['favicon.svg', 'icon-192.png', 'icon-512.png', 'og-image.jpg'],
       manifest: {
         name: 'Luis Gilberto Murillo 2026',
         short_name: 'LGM2026',
-        description: 'La Colombia olvidada merece un presidente que la conoce por dentro.',
+        description: 'Candidato independiente del Choco. Sin partido, sin escandalos.',
         theme_color: '#F5A623',
-        background_color: '#FAFAF5',
+        background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
-        lang: 'es',
+        scope: '/',
+        lang: 'es-CO',
         icons: [
           {
             src: '/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'any'
           },
           {
             src: '/icon-512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'any'
           },
-        ],
+          {
+            src: '/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ]
       },
       workbox: {
-        // Cachear todos los assets estáticos para que funcione offline
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,webp}'],
         runtimeCaching: [
           {
-            // Cachear Google Fonts
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
+            // HTML -> NetworkFirst: correcciones de datos llegan rapido
+            urlPattern: /\.html$/,
+            handler: 'NetworkFirst',
+            options: { networkTimeoutSeconds: 3, cacheName: 'html-cache' }
           },
           {
+            // Google Fonts CSS
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'google-fonts-stylesheets' }
+          },
+          {
+            // Google Fonts archivos
             urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'gstatic-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
-      },
+              cacheName: 'google-fonts-webfonts',
+              expiration: { maxAgeSeconds: 60 * 60 * 24 * 365 }
+            }
+          }
+        ]
+      }
     }),
   ],
   build: {
