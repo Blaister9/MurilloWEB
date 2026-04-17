@@ -67,6 +67,16 @@ export default defineConfig({
       }
     }),
   ],
+  ssgOptions: {
+    script: 'defer',
+    formatting: 'minify',
+    includedRoutes() {
+      return ['/', '/qr', '/stats']
+    },
+    onFinished() {
+      console.log('SSG pre-rendering completo')
+    }
+  },
   build: {
     outDir: 'dist',
     sourcemap: false,

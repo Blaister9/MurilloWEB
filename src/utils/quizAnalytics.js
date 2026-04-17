@@ -10,9 +10,16 @@ const STORAGE_KEY = 'lgm_quiz_results'
  * @param {Object} respuestas - { preguntaId: candidatoId }
  * @param {string} candidatoFinal - id del candidato ganador
  */
+// SSG guard: localStorage solo disponible en el browser
+const safeStorage = typeof localStorage !== 'undefined' ? localStorage : {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+}
+
 export function guardarResultado(respuestas, candidatoFinal) {
   try {
-    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    const existing = JSON.parse(safeStorage.getItem(STORAGE_KEY) || '[]')
     const nuevo = {
       id: Date.now(),
       fecha: new Date().toISOString(),
@@ -23,7 +30,7 @@ export function guardarResultado(respuestas, candidatoFinal) {
       })),
     }
     existing.push(nuevo)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing))
+    safeStorage.setItem(STORAGE_KEY, JSON.stringify(existing))
   } catch {
     // Fallo silencioso — el quiz sigue funcionando igual
   }
@@ -35,7 +42,7 @@ export function guardarResultado(respuestas, candidatoFinal) {
  */
 export function obtenerEstadisticas() {
   try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    const data = JSON.parse(safeStorage.getItem(STORAGE_KEY) || '[]')
     if (data.length === 0) return null
 
     const conteo = data.reduce((acc, r) => {
@@ -63,7 +70,7 @@ export function obtenerEstadisticas() {
  */
 export function limpiarDatos() {
   try {
-    localStorage.removeItem(STORAGE_KEY)
+    safeStorage.removeItem(STORAGE_KEY)
   } catch {
     // silencioso
   }

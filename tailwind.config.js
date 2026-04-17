@@ -18,10 +18,10 @@ export default {
         fondoCard: '#FFFFFF',
       },
       fontFamily: {
-        display: ['"Playfair Display"', 'serif'],
-        body: ['"DM Sans"', 'sans-serif'],
-        impact: ['"Bebas Neue"', 'cursive'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
+        body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        impact: ['"Bebas Neue"', 'Arial Narrow', 'sans-serif'],
+        mono: ['"Space Mono"', 'Courier New', 'monospace'],
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
@@ -43,5 +43,9 @@ export default {
       },
     },
   },
+  safelist: [
+    'animate-fade-up',
+    'animate-fade-in',
+  ],
   plugins: [],
 }

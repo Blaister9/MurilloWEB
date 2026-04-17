@@ -19,13 +19,20 @@ const BADGES = [
  * @param {string} tipo - tipo de share ('whatsapp' | 'twitter' | 'tarjeta' | 'quiz' | 'kit')
  * @returns {{ total: number, badge: Object|null }}
  */
+// SSG guard: localStorage solo disponible en el browser
+const safeStorage = typeof localStorage !== 'undefined' ? localStorage : {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+}
+
 export function registrarShare(tipo = 'general') {
   try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"total":0,"detalle":{}}')
+    const data = JSON.parse(safeStorage.getItem(STORAGE_KEY) || '{"total":0,"detalle":{}}')
     data.total = (data.total || 0) + 1
     data.detalle[tipo] = (data.detalle[tipo] || 0) + 1
     data.ultimoShare = new Date().toISOString()
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    safeStorage.setItem(STORAGE_KEY, JSON.stringify(data))
     return { total: data.total, badge: obtenerBadge(data.total) }
   } catch {
     return { total: 0, badge: null }
@@ -38,7 +45,7 @@ export function registrarShare(tipo = 'general') {
  */
 export function obtenerShares() {
   try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"total":0,"detalle":{}}')
+    const data = JSON.parse(safeStorage.getItem(STORAGE_KEY) || '{"total":0,"detalle":{}}')
     return {
       total: data.total || 0,
       detalle: data.detalle || {},
@@ -66,7 +73,7 @@ export function obtenerBadge(total) {
  */
 export function limpiarShares() {
   try {
-    localStorage.removeItem(STORAGE_KEY)
+    safeStorage.removeItem(STORAGE_KEY)
   } catch {
     // silencioso
   }

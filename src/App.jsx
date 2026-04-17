@@ -13,6 +13,7 @@ import Footer from './components/layout/Footer'
 import Hero from './components/sections/Hero'
 import Countdown from './components/sections/Countdown'
 import { CitizenBanner, LowBandwidthBanner } from './components/ui/LowBandwidthBanner'
+import OfflineBanner from './components/ui/OfflineBanner'
 import { useConnectionSpeed } from './hooks/useConnectionSpeed'
 import NotFound from './pages/NotFound'
 
@@ -28,19 +29,11 @@ const KitWhatsapp     = lazy(() => import('./components/sections/KitWhatsapp'))
 const QRPage          = lazy(() => import('./components/sections/QRPage'))
 const Stats           = lazy(() => import('./components/sections/Stats'))
 
-// Skeleton genérico de carga
+// Skeleton ligero de carga
 function SectionSkeleton() {
   return (
-    <div className="py-20 px-4 flex justify-center">
-      <div className="w-full max-w-6xl">
-        <div className="h-7 bg-gray-200 rounded-xl animate-pulse mb-4 w-1/3 mx-auto" />
-        <div className="h-4 bg-gray-100 rounded-xl animate-pulse mb-2 w-2/3 mx-auto" />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-40 bg-gray-100 rounded-2xl animate-pulse" />
-          ))}
-        </div>
-      </div>
+    <div className="py-24 flex justify-center">
+      <div className="w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
     </div>
   )
 }
@@ -51,6 +44,9 @@ function MainLayout() {
 
   return (
     <div className="min-h-screen bg-fondo">
+      {/* Banner offline — aparece cuando pierde conexion */}
+      <OfflineBanner />
+
       {/* Banner "iniciativa ciudadana" — siempre visible, descartable */}
       <CitizenBanner />
 
