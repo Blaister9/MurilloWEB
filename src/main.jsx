@@ -8,7 +8,12 @@ import '@fontsource/bebas-neue/400.css'
 import '@fontsource/space-mono/400.css'
 import '@fontsource/space-mono/700.css'
 import './index.css'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import { ViteReactSSG } from 'vite-react-ssg/single-page'
 
-export const createRoot = ViteReactSSG(<App />)
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
